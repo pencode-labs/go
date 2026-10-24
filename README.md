@@ -1,4 +1,4 @@
-# Go Language Server
+# Go
 
 Registers an installed `gopls` language server with Pencode. Install it separately with `go install golang.org/x/tools/gopls@latest`.
 
@@ -7,8 +7,8 @@ Uses the [Pencode](https://github.com/pencode-labs/pencode) peb v6 SDK. Requires
 ## Build and install
 
 ```sh
-git clone https://github.com/pencode-labs/go-lsp.git
-cd go-lsp
+git clone https://github.com/pencode-labs/go.git
+cd go
 go build -o bin/go-lsp .
 ```
 

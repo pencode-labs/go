@@ -1,4 +1,4 @@
-module github.com/pencode-labs/go-lsp
+module github.com/pencode-labs/go
 
 go 1.27.0
 
