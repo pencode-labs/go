@@ -1,4 +1,4 @@
-// Go LSP demonstrates registering an installed language server with Pencode.
+// The Go extension registers an installed language server with Pencode.
 // The extension exits after registration; the host owns gopls and its documents.
 package main
 

@@ -1,6 +1,6 @@
 {
   "id": "go",
-  "name": "Go Language Server",
+  "name": "Go",
   "version": "1.0.0",
   "publisher": "Pencode",
   "description": "Go code intelligence powered by an installed gopls",
