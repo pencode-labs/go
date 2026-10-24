@@ -9,12 +9,12 @@ Uses the [Pencode](https://github.com/pencode-labs/pencode) peb v6 SDK. Requires
 ```sh
 git clone https://github.com/pencode-labs/go.git
 cd go
-go build -o bin/go-lsp .
+go build -o bin/go .
 ```
 
 In Pencode's extension manager, choose **Install from local directory** and select this checkout. Extensions run on the workspace server, so build and install on that host for remote workspaces.
 
-On Windows, build `bin/go-lsp.exe` and set `entry` in `resources/extension.json` to `bin/go-lsp.exe` before installing.
+On Windows, build `bin/go.exe` and set `entry` in `resources/extension.json` to `bin/go.exe` before installing.
 
 ## Development
 
