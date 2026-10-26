@@ -5,6 +5,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"html"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -53,7 +54,7 @@ func run() error {
 			return
 		}
 		go func() {
-			_ = publisher.Notify(peb.Notification{ID: "tools", Title: "Go", Message: "正在检查并安装 gopls 和 Delve…"})
+			_ = publisher.Show(toolNotification("Go", "正在检查并安装 gopls 和 Delve…", false))
 			ctx, cancel := context.WithTimeout(activate, 10*time.Minute)
 			defer cancel()
 			var failures string
@@ -65,9 +66,11 @@ func run() error {
 			}
 			active.Store(false)
 			if failures != "" {
-				_ = publisher.Notify(peb.Notification{ID: "tools", Title: "Go：工具安装失败", Message: failures + "详细日志见 Output → Extension: go。", Error: true, Action: "tools", ActionText: "重试"})
+				_ = publisher.Show(toolNotification("Go：工具安装失败", failures+"详细日志见 Output → Extension: go。", true))
 			} else {
-				_ = publisher.Notify(peb.Notification{ID: "tools", Title: "Go", Message: "gopls 和 Delve 已就绪"})
+				ui := toolNotification("Go", "gopls 和 Delve 已就绪", false)
+				ui.AutoCloseMS = 5000
+				_ = publisher.Show(ui)
 			}
 		}()
 	}
@@ -76,13 +79,22 @@ func run() error {
 			activate, publisher = ctx, p
 			install()
 		},
-		Action: func(c peb.ActionContext) error {
-			if c.ID == "tools" {
+		UIEvent: func(e peb.UIEvent) error {
+			if e.ID == "tools" && e.Event.Kind == "click" && e.Event.Ref == "retry" {
 				install()
 			}
 			return nil
 		},
 	})
+}
+
+func toolNotification(title, message string, retry bool) peb.UI {
+	view := &peb.EditorView{HTML: "<p>" + html.EscapeString(message) + "</p>", CSS: "p { white-space: pre-wrap; }"}
+	if retry {
+		view.HTML += `<button data-ref="retry" type="button">重试</button>`
+		view.Events = []peb.EditorBinding{{Ref: "retry", Kind: "click"}}
+	}
+	return peb.UI{ID: "tools", Title: title, Kind: peb.Notification, View: view}
 }
 
 func goContributions(executable string) peb.Contributions {

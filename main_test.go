@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -66,17 +67,17 @@ func TestActivationInstallsAfterRegistrationAndPublishesReadiness(t *testing.T) 
 	}
 	for {
 		frame, err := r.Read()
-		if err != nil || frame.Kind != peb.NotificationUpdate {
+		if err != nil || frame.Kind != peb.UIUpdate {
 			t.Fatal("status update", frame, err)
 		}
-		notification, err := peb.DecodeNotification(frame.Payload)
+		notification, err := peb.DecodeUI(frame.Payload)
 		if err != nil {
 			t.Fatal(err)
 		}
-		if notification.Error {
-			t.Fatal(notification.Message)
+		if notification.Kind != peb.Notification || strings.Contains(notification.Title, "失败") {
+			t.Fatal(notification)
 		}
-		if notification.Message == "gopls 和 Delve 已就绪" {
+		if notification.AutoCloseMS > 0 && strings.Contains(notification.View.HTML, "gopls 和 Delve 已就绪") {
 			break
 		}
 	}
@@ -136,21 +137,21 @@ func TestFailedActivationNotifiesAndRetriesWithoutStatusBarAction(t *testing.T) 
 	if err := w.Write(peb.ActionActivate, 0, nil); err != nil {
 		t.Fatal(err)
 	}
-	readNotification := func() peb.Notification {
+	readNotification := func() peb.UI {
 		t.Helper()
 		frame, err := r.Read()
-		if err != nil || frame.Kind != peb.NotificationUpdate {
+		if err != nil || frame.Kind != peb.UIUpdate {
 			t.Fatal("expected notification", frame, err)
 		}
-		n, err := peb.DecodeNotification(frame.Payload)
-		if err != nil {
+		n, err := peb.DecodeUI(frame.Payload)
+		if err != nil || n.Kind != peb.Notification || n.View == nil {
 			t.Fatal(err)
 		}
 		return n
 	}
 	readNotification() // Checking tools.
 	failure := readNotification()
-	if !failure.Error || failure.Action != "tools" || failure.ActionText == "" {
+	if !strings.Contains(failure.Title, "失败") || failure.AutoCloseMS != 0 || len(failure.View.Events) != 1 || failure.View.Events[0].Ref != "retry" {
 		t.Fatal("failure has no retry", failure)
 	}
 	if err := os.MkdirAll(directory, 0755); err != nil {
@@ -161,8 +162,8 @@ func TestFailedActivationNotifiesAndRetriesWithoutStatusBarAction(t *testing.T) 
 			t.Fatal(err)
 		}
 	}
-	request, _ := peb.EncodeActionContext(nil, peb.ActionContext{ID: failure.Action})
-	if err := w.Write(peb.ActionInvoke, 2, request); err != nil {
+	request, _ := peb.EncodeUIEvent(nil, peb.UIEvent{ID: failure.ID, Event: peb.EditorEvent{Kind: "click", Ref: "retry"}})
+	if err := w.Write(peb.UIRequest, 2, request); err != nil {
 		t.Fatal(err)
 	}
 	ready, response := false, false
@@ -172,13 +173,13 @@ func TestFailedActivationNotifiesAndRetriesWithoutStatusBarAction(t *testing.T) 
 			t.Fatal(err)
 		}
 		switch frame.Kind {
-		case peb.NotificationUpdate:
-			n, err := peb.DecodeNotification(frame.Payload)
-			if err != nil || n.Error {
+		case peb.UIUpdate:
+			n, err := peb.DecodeUI(frame.Payload)
+			if err != nil || n.Kind != peb.Notification || strings.Contains(n.Title, "失败") || n.View == nil {
 				t.Fatal(n, err)
 			}
-			ready = n.Message == "gopls 和 Delve 已就绪"
-		case peb.ActionResponse:
+			ready = n.AutoCloseMS > 0 && strings.Contains(n.View.HTML, "gopls 和 Delve 已就绪")
+		case peb.UIResponse:
 			response = frame.ID == 2
 		default:
 			t.Fatal("unexpected frame", frame)

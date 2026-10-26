@@ -21,6 +21,7 @@ project GOOS/GOARCH. Downloads run in the background after registration; languag
 and debug launchers also ensure their tool is ready on first use (up to 10 minutes).
 Tool checks, readiness and errors use Pencode’s bottom-right notifications. Failed
 checks include a **Retry** button; no Go tool status button occupies the status bar.
+Readiness notifications close automatically after five seconds.
 Details appear in **Output → Extension: go** (or the language/debug output for a
 first-use launch).
 
@@ -33,7 +34,7 @@ not need to be added to PATH. Explicit debugger `command` settings take priority
 
 ## Build and install
 
-Uses the Pencode peb v8 SDK. Requires Go 1.27.0 or newer.
+Uses the Pencode peb v9 SDK. Requires Go 1.27.0 or newer.
 
 ```sh
 go build -o bin/go .
