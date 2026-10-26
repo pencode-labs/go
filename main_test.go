@@ -23,7 +23,7 @@ func TestGoExtensionProcess(t *testing.T) {
 	os.Exit(0)
 }
 
-func TestActivationInstallsAfterRegistrationAndPublishesReadiness(t *testing.T) {
+func TestActivationInstallsAfterRegistrationAndRemovesStatus(t *testing.T) {
 	tools := fakeGo(t)
 	t.Setenv("PENCODE_GO_TOOLS_DIR", tools.directory)
 	t.Setenv("PENCODE_GO_EXTENSION_HELPER", "1")
@@ -77,7 +77,7 @@ func TestActivationInstallsAfterRegistrationAndPublishesReadiness(t *testing.T) 
 		if strings.Contains(change.Action.Text, "失败") {
 			t.Fatal(change.Action.Tooltip)
 		}
-		if change.Action.Text == "Go：工具已就绪" {
+		if change.Remove && change.Action.ID == "tools" {
 			break
 		}
 	}

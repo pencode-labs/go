@@ -67,7 +67,7 @@ func run() error {
 			if failures != "" {
 				_ = publisher.Update(toolStatus("Go：工具安装失败，点击重试", false, failures))
 			} else {
-				_ = publisher.Update(toolStatus("Go：工具已就绪", false, "gopls 和 Delve 已就绪；点击重新检查"))
+				_ = publisher.Remove("tools")
 			}
 		}()
 	}
