@@ -20,7 +20,8 @@ GOPRIVATE and GOTOOLCHAIN settings, and installs host executables independently 
 project GOOS/GOARCH. Downloads run in the background after registration; language
 and debug launchers also ensure their tool is ready on first use (up to 10 minutes).
 Tool checks, readiness and errors use Pencode’s bottom-right notifications. Failed
-checks include a **Retry** button; no Go tool status button occupies the status bar.
+checks include **Retry** and **View Logs** buttons. **View Logs** opens Output with
+**Extension: go** selected and clears the output filter.
 Readiness notifications close automatically after five seconds.
 Details appear in **Output → Extension: go** (or the language/debug output for a
 first-use launch).

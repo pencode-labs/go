@@ -154,6 +154,9 @@ func TestFailedActivationNotifiesAndRetriesWithoutStatusBarAction(t *testing.T) 
 	if !strings.Contains(failure.Title, "失败") || failure.AutoCloseMS != 0 || len(failure.View.Events) != 1 || failure.View.Events[0].Ref != "retry" {
 		t.Fatal("failure has no retry", failure)
 	}
+	if !strings.Contains(failure.View.HTML, `data-pencode-action="show-output"`) || !strings.Contains(failure.View.HTML, "查看日志") {
+		t.Fatal("failure has no output action", failure)
+	}
 	if err := os.MkdirAll(directory, 0755); err != nil {
 		t.Fatal(err)
 	}

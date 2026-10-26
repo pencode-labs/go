@@ -91,7 +91,8 @@ func run() error {
 func toolNotification(title, message string, retry bool) peb.UI {
 	view := &peb.EditorView{HTML: "<p>" + html.EscapeString(message) + "</p>", CSS: "p { white-space: pre-wrap; }"}
 	if retry {
-		view.HTML += `<button data-ref="retry" type="button">重试</button>`
+		view.HTML += `<div class="actions"><button data-ref="retry" type="button">重试</button><button data-ref="logs" data-pencode-action="show-output" type="button">查看日志</button></div>`
+		view.CSS += " .actions { display: flex; gap: 8px; }"
 		view.Events = []peb.EditorBinding{{Ref: "retry", Kind: "click"}}
 	}
 	return peb.UI{ID: "tools", Title: title, Kind: peb.Notification, View: view}
