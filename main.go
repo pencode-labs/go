@@ -53,8 +53,7 @@ func run() error {
 			return
 		}
 		go func() {
-			defer active.Store(false)
-			_ = publisher.Update(toolStatus("Go：正在检查工具…", true, ""))
+			_ = publisher.Notify(peb.Notification{ID: "tools", Title: "Go", Message: "正在检查并安装 gopls 和 Delve…"})
 			ctx, cancel := context.WithTimeout(activate, 10*time.Minute)
 			defer cancel()
 			var failures string
@@ -64,10 +63,11 @@ func run() error {
 					failures += err.Error() + "\n"
 				}
 			}
+			active.Store(false)
 			if failures != "" {
-				_ = publisher.Update(toolStatus("Go：工具安装失败，点击重试", false, failures))
+				_ = publisher.Notify(peb.Notification{ID: "tools", Title: "Go：工具安装失败", Message: failures + "详细日志见 Output → Extension: go。", Error: true, Action: "tools", ActionText: "重试"})
 			} else {
-				_ = publisher.Update(toolStatus("Go：工具已就绪", false, "gopls 和 Delve 已就绪；点击重新检查"))
+				_ = publisher.Notify(peb.Notification{ID: "tools", Title: "Go", Message: "gopls 和 Delve 已就绪"})
 			}
 		}()
 	}
@@ -76,18 +76,18 @@ func run() error {
 			activate, publisher = ctx, p
 			install()
 		},
-		Action: func(peb.ActionContext) error { install(); return nil },
+		Action: func(c peb.ActionContext) error {
+			if c.ID == "tools" {
+				install()
+			}
+			return nil
+		},
 	})
-}
-
-func toolStatus(text string, disabled bool, tooltip string) peb.Action {
-	return peb.Action{ID: "tools", Text: text, Tooltip: tooltip, Location: peb.StatusBar, Disabled: disabled}
 }
 
 func goContributions(executable string) peb.Contributions {
 	command := "bin/" + executable
 	return peb.Contributions{
-		Actions: []peb.Action{toolStatus("Go：检查工具", true, "自动检测并安装 gopls 和 Delve")},
 		LanguageServers: []peb.LanguageServer{{
 			ID: "gopls", Label: "Go (gopls)", LanguageID: "go", Command: command, Args: []string{"--tool", "gopls"},
 			Selectors:     []peb.DocumentSelector{{Match: peb.FileSuffix, Pattern: ".go"}, {Match: peb.FileName, Pattern: "go.mod", LanguageID: "go.mod"}, {Match: peb.FileName, Pattern: "go.work", LanguageID: "go.work"}},

@@ -19,7 +19,8 @@ Install Go on the workspace machine first. The extension preserves GOPROXY,
 GOPRIVATE and GOTOOLCHAIN settings, and installs host executables independently of
 project GOOS/GOARCH. Downloads run in the background after registration; language
 and debug launchers also ensure their tool is ready on first use (up to 10 minutes).
-The Go status button shows readiness or an error; click it to check again or retry.
+Tool checks, readiness and errors use Pencode’s bottom-right notifications. Failed
+checks include a **Retry** button; no Go tool status button occupies the status bar.
 Details appear in **Output → Extension: go** (or the language/debug output for a
 first-use launch).
 

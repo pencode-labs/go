@@ -123,7 +123,7 @@ func (t *toolManager) ensure(ctx context.Context, name string) (string, error) {
 	cmd.Env = installEnvironment(stage)
 	cmd.Stdout, cmd.Stderr = t.log, t.log
 	if err := cmd.Run(); err != nil {
-		return "", fmt.Errorf("install %s: %w (see Extension: go output; click Go status to retry)", name, err)
+		return "", fmt.Errorf("install %s: %w (see Extension: go output)", name, err)
 	}
 	from, destination := filepath.Join(stage, toolFilename(name)), filepath.Join(t.directory, toolFilename(name))
 	if !executable(from) {
