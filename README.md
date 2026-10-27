@@ -35,7 +35,7 @@ not need to be added to PATH. Explicit debugger `command` settings take priority
 
 ## Build and install
 
-Uses the Pencode peb v9 SDK. Requires Go 1.27.0 or newer.
+Uses the Pencode peb v10 SDK. Requires Go 1.27.0 or newer.
 
 ```sh
 go build -o bin/go .
