@@ -35,7 +35,7 @@ not need to be added to PATH. Explicit debugger `command` settings take priority
 
 ## Build and install
 
-Uses the Pencode peb v10 SDK. Requires Go 1.27.0 or newer.
+Uses the Pencode peb v14 SDK. Requires Go 1.27.0 or newer.
 
 ```sh
 go build -o bin/go .
@@ -47,8 +47,9 @@ this checkout. Build and install on the workspace host for remote workspaces.
 On Windows build `bin/go.exe` and set `entry` in `resources/extension.json` to
 `bin/go.exe` before installing.
 
-Save files, select **Go: current package** or its tests in Debug, press F9 to set a
-breakpoint and F5 to start. Project launch/attach configuration is documented in
+In Debug, choose **添加启动器** and select **Go: 当前项目** or **Go: 包测试**.
+This appends a template to `.pencode/debug.json` and opens the JSON for editing.
+Save changes, press F9 to set a breakpoint and F5 to start. Project launch/attach configuration is documented in
 [Pencode’s debugger guide](https://github.com/pencode-labs/pencode/blob/main/debugger/README.md).
 
 ## License

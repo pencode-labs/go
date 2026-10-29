@@ -106,6 +106,6 @@ func goContributions(executable string) peb.Contributions {
 			Selectors:     []peb.DocumentSelector{{Match: peb.FileSuffix, Pattern: ".go"}, {Match: peb.FileName, Pattern: "go.mod", LanguageID: "go.mod"}, {Match: peb.FileName, Pattern: "go.work", LanguageID: "go.work"}},
 			Configuration: `{"gopls":{"analyses":{"unusedparams":true},"staticcheck":true,"gofumpt":true}}`,
 		}},
-		DebugAdapters: []peb.DebugAdapter{{ID: "Delve", Label: "Go (Delve)", Command: command, Args: []string{"--tool", "dlv"}}},
+		DebugAdapters: []peb.DebugAdapter{{ID: "Delve", Label: "Go (Delve)", Command: command, Args: []string{"--tool", "dlv"}, Templates: `[{"label":"Go: 当前项目","adapter":"Delve","request":"launch","configuration":{"mode":"debug","program":"${workspaceFolder}","cwd":"${workspaceFolder}"}},{"label":"Go: 包测试","adapter":"Delve","request":"launch","configuration":{"mode":"test","program":"${workspaceFolder}","cwd":"${workspaceFolder}"}}]`}},
 	}
 }

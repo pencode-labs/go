@@ -9,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/pencode-labs/pencode/debugger"
 	"github.com/pencode-labs/pencode/peb"
 )
 
@@ -58,6 +59,10 @@ func TestActivationInstallsAfterRegistrationAndPublishesReadiness(t *testing.T) 
 	contributions, err := peb.DecodeContributions(frame.Payload)
 	if err != nil || !contributions.ActionService || len(contributions.Actions) != 0 || len(contributions.DebugAdapters) != 1 || len(contributions.LanguageServers) != 1 {
 		t.Fatal("contributions", contributions, err)
+	}
+	templates, err := debugger.ParseConfigs([]byte(contributions.DebugAdapters[0].Templates), "${workspaceFolder}")
+	if err != nil || len(templates) != 2 || templates[0].Adapter != "Delve" {
+		t.Fatal("Go templates", templates, err)
 	}
 	if _, err := os.Stat(tools.directory); !os.IsNotExist(err) {
 		t.Fatal("registration performed tool installation")
