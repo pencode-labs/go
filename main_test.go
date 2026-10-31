@@ -156,7 +156,7 @@ func TestFailedActivationNotifiesAndRetriesWithoutStatusBarAction(t *testing.T) 
 	}
 	readNotification() // Checking tools.
 	failure := readNotification()
-	if !strings.Contains(failure.Title, "失败") || failure.AutoCloseMS != 0 || len(failure.View.Events) != 1 || failure.View.Events[0].Ref != "retry" {
+	if !strings.Contains(failure.Title, "失败") || failure.Severity != peb.NotificationError || failure.AutoCloseMS != 0 || len(failure.View.Events) != 1 || failure.View.Events[0].Ref != "retry" {
 		t.Fatal("failure has no retry", failure)
 	}
 	if !strings.Contains(failure.View.HTML, `data-pencode-action="show-output"`) || !strings.Contains(failure.View.HTML, "查看日志") {

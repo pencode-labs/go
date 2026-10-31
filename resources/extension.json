@@ -3,6 +3,6 @@
   "name": "Go",
   "version": "1.1.0",
   "publisher": "Pencode",
-  "description": "Go language support with automatic gopls and Delve installation",
+  "description": "通过 gopls 提供 Go 代码补全、错误诊断、定义跳转、引用查找、重命名与格式化。集成 Delve 调试，支持断点、单步执行、调用栈和变量查看，并自动安装缺失工具。",
   "entry": "bin/go"
 }

@@ -55,3 +55,15 @@ Save changes, press F9 to set a breakpoint and F5 to start. Project launch/attac
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+## Releases
+
+Push a `v*` tag (for example, `v1.1.0`) to this repository, or publish a GitHub Release,
+to test and build Linux, macOS and Windows packages for amd64 and arm64. The workflow
+uploads ZIP archives and `SHA256SUMS` to the matching release, creating it if needed.
+Prerelease tags such as `v1.1.0-rc.1` create prereleases.
+
+Each ZIP contains `bin/`, `resources/`, the README and license. Its manifest uses the
+tag version and the correct executable suffix for Windows. Download the package
+for the workspace server's OS and architecture, extract it, then install the
+extracted directory through Pencode's extension manager.
