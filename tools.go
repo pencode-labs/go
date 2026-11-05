@@ -15,11 +15,11 @@ import (
 )
 
 type toolManager struct {
-	mu        sync.Mutex
+	log       io.Writer
 	directory string
 	paths     []string
+	mu        sync.Mutex
 	probed    bool
-	log       io.Writer
 }
 
 func newTools() (*toolManager, error) {
