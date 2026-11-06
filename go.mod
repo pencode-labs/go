@@ -3,7 +3,7 @@ module github.com/pencode-labs/go
 go 1.27.0
 
 require (
-	github.com/pencode-labs/pencode v0.0.0-20261029165847-e535e9d97dba
+	github.com/pencode-labs/pencode v0.1.0-rc.1
 	golang.org/x/sys v0.49.0
 )
 
